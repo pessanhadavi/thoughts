@@ -12,10 +12,6 @@ module.exports = class AuthController {
   }
 
   static async registerPost(req, res) {
-    res.render("auth/register");
-  }
-
-  static async registerPost(req, res) {
     const { name, email, password, confirmpassword } = req.body
 
     // passwords match validation
@@ -59,5 +55,10 @@ module.exports = class AuthController {
         })
       })
       .catch((err) => console.log(err))
+  }
+
+  static logout(req, res) {
+    req.session.destroy()
+    res.redirect('/login')
   }
 };
