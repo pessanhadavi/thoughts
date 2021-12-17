@@ -17,6 +17,11 @@ module.exports = class ThoughtController {
       plain: true
     });
 
+    // check if user exists
+    if (!user) {
+      res.redirect("/login");
+    }
+
     const thoughts = user.Thoughts.map((result) => result.dataValues);
 
     let emptyThoughts = true;
@@ -25,9 +30,6 @@ module.exports = class ThoughtController {
       emptyThoughts = false;
     }
 
-    console.log(thoughts);
-    console.log(emptyThoughts);
-
     res.render("thoughts/dashboard", { thoughts, emptyThoughts });
   }
 
@@ -35,19 +37,19 @@ module.exports = class ThoughtController {
     res.render("thoughts/create");
   }
 
-  static async createThoughtSave(req, res) {
+  static createThoughtSave(req, res) {
     const thought = {
       title: req.body.title,
-      UserId: req.session.userid,
-    }
+      UserId: req.session.userid
+    };
 
-    await Thought.create(thought)
+    Thought.create(thought)
       .then(() => {
-        req.flash('message', 'Pensamento criado com sucesso!')
+        req.flash("message", "Pensamento criado com sucesso!");
         req.session.save(() => {
-          res.redirect('/thoughts/dashboard')
-        })
+          res.redirect("/thoughts/dashboard");
+        });
       })
-      .catch((err) => console.log(err))
+      .catch((err) => console.log(err));
   }
 };

@@ -75,7 +75,7 @@ module.exports = class AuthController {
       password: hashedPassword
     };
 
-    const createdUser = await User.create(user)
+    const createdUser = User.create(user)
       .then((user) => {
         // initialize session
         req.session.userid = user.id;
