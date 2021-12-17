@@ -52,4 +52,18 @@ module.exports = class ThoughtController {
       })
       .catch((err) => console.log(err));
   }
+
+  static removeThought(req, res) {
+    const id = req.body.id;
+    const UserId = req.session.userid
+
+    Thought.destroy({ where: { id: id, UserId: UserId } })
+      .then(() => {
+        req.flash("message", "Pensamento removido com sucesso!");
+        req.session.save(() => {
+          res.redirect("/thoughts/dashboard");
+        });
+      })
+      .catch((err) => console.log(err));
+  }
 };
