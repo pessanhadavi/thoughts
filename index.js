@@ -12,6 +12,12 @@ const conn = require("./db/conn");
 const Thought = require("./models/Thought");
 const User = require("./models/User");
 
+// Import Routes
+const thoughtsRoutes = require("./routes/thoughtsRoutes");
+
+// Import Controller
+const ThoughtController = require("./controllers/ThoughtController");
+
 // template engine
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
@@ -59,6 +65,11 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// Routes
+app.use("/thoughts", thoughtsRoutes)
+
+app.get("/", ThoughtController.showThoughts)
 
 conn
   // .sync({ force: true })
