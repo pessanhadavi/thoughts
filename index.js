@@ -67,9 +67,9 @@ app.use((req, res, next) => {
 });
 
 // Routes
-app.use("/thoughts", thoughtsRoutes)
+app.use("/thoughts", thoughtsRoutes);
 
-app.get("/", ThoughtController.showThoughts)
+app.get("/", ThoughtController.showThoughts);
 
 conn
   // .sync({ force: true })
