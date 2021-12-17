@@ -1,9 +1,8 @@
-const { response } = require("express")
 const Thought = require("../models/Thought")
 const User = require("../models/User")
 
-module.exports = class ThoughtsController {
+module.exports = class ThoughtController {
   static async showThoughts(req, res) {
-    response.render("thoughts/home")
+    res.render("thoughts/home")
   }
 }
