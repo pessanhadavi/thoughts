@@ -34,4 +34,20 @@ module.exports = class ThoughtController {
   static createThought(req, res) {
     res.render("thoughts/create");
   }
+
+  static async createThoughtSave(req, res) {
+    const thought = {
+      title: req.body.title,
+      UserId: req.session.userid,
+    }
+
+    await Thought.create(thought)
+      .then(() => {
+        req.flash('message', 'Pensamento criado com sucesso!')
+        req.session.save(() => {
+          res.redirect('/thoughts/dashboard')
+        })
+      })
+      .catch((err) => console.log(err))
+  }
 };
