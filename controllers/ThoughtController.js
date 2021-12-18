@@ -55,11 +55,38 @@ module.exports = class ThoughtController {
 
   static removeThought(req, res) {
     const id = req.body.id;
-    const UserId = req.session.userid
+    const UserId = req.session.userid;
 
     Thought.destroy({ where: { id: id, UserId: UserId } })
       .then(() => {
         req.flash("message", "Pensamento removido com sucesso!");
+        req.session.save(() => {
+          res.redirect("/thoughts/dashboard");
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  static updateThought(req, res) {
+    const id = req.params.id;
+
+    Thought.findOne({ where: { id: id }, raw: true })
+      .then((thought) => {
+        res.render("thoughts/edit", { thought });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  static updateThoughtPost(req, res) {
+    const id = req.body.id;
+
+    const thought = {
+      title: req.body.title,
+    };
+
+    Thought.update(thought, { where: { id: id } })
+      .then(() => {
+        req.flash("message", "Pensamento atualizado com sucesso!");
         req.session.save(() => {
           res.redirect("/thoughts/dashboard");
         });
