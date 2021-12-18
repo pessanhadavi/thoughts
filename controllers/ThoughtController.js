@@ -1,9 +1,45 @@
 const Thought = require("../models/Thought");
 const User = require("../models/User");
 
+const { Op } = require("sequelize");
+
 module.exports = class ThoughtController {
-  static async showThoughts(req, res) {
-    res.render("thoughts/home");
+  static showThoughts(req, res) {
+    // check if user is searching
+    let search = "";
+
+    if (req.query.search) {
+      search = req.query.search;
+    }
+
+    // order results, newest first
+    let order = "DESC";
+
+    if (req.query.order === "old") {
+      order = "ASC";
+    } else {
+      order = "DESC";
+    }
+
+    Thought.findAll({
+      include: User,
+      where: {
+        title: { [Op.like]: `%${search}%` }
+      },
+      order: [["createdAt", order]]
+    })
+      .then((data) => {
+        let thoughtsQty = data.length;
+
+        if (thoughtsQty === 0) {
+          thoughtsQty = false;
+        }
+
+        const thoughts = data.map((result) => result.get({ plain: true }));
+
+        res.render("thoughts/home", { thoughts, thoughtsQty, search });
+      })
+      .catch((err) => console.log(err));
   }
 
   static async dashboard(req, res) {
@@ -81,7 +117,7 @@ module.exports = class ThoughtController {
     const id = req.body.id;
 
     const thought = {
-      title: req.body.title,
+      title: req.body.title
     };
 
     Thought.update(thought, { where: { id: id } })
