@@ -1,5 +1,5 @@
 const express = require("express");
-const exphbs = require("express-handlebars");
+const { engine } = require('express-handlebars');
 const session = require("express-session");
 const FileStore = require("session-file-store")(session);
 const flash = require("express-flash");
@@ -20,7 +20,7 @@ const authRoutes = require("./routes/authRoutes");
 const ThoughtController = require("./controllers/ThoughtController");
 
 // template engine
-app.engine("handlebars", exphbs());
+app.engine("handlebars", engine());
 app.set("view engine", "handlebars");
 
 // receber resposta do body
@@ -74,8 +74,8 @@ app.use("/", authRoutes);
 app.get("/", ThoughtController.showThoughts);
 
 conn
-  // .sync({ force: true })
-  .sync()
+  .sync({ force: true })
+  // .sync()
   .then(() => {
     app.listen(3000);
   })

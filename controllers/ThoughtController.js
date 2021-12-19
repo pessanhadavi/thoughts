@@ -113,7 +113,7 @@ module.exports = class ThoughtController {
       .catch((err) => console.log(err));
   }
 
-  static updateThoughtPost(req, res) {
+  static updateThoughtSave(req, res) {
     const id = req.body.id;
 
     const thought = {
